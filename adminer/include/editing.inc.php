@@ -297,7 +297,9 @@ function edit_fields($fields, $collations, $type = "TABLE", $foreign_keys = arra
 	foreach ($fields as $i => $field) {
 		$i++;
 		$orig = $field[($_POST ? "orig" : "field")];
-		$display = (isset($_POST["add"][$i-1]) || (isset($field["field"]) && !$_POST["drop_col"][$i])) && (support("drop_col") || $orig == "");
+		$bool_1 = ($_POST["add"] != null && isset($_POST["add"][$i-1]));
+		$bool_2 = (isset($field["field"]) && ($_POST["drop_col"] == null ? true : !$_POST["drop_col"][$i]));
+		$display = ($bool_1 || $bool_2) && (support("drop_col") || $orig == "");
 		?>
 <tr<?php echo ($display ? "" : " style='display: none;'"); ?>>
 <?php echo ($type == "PROCEDURE" ? "<td>" . html_select("fields[$i][inout]", explode("|", $inout), $field["inout"]) : ""); ?>

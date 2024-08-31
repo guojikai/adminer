@@ -1092,6 +1092,9 @@ if (!defined("DRIVER")) {
 	* @return string
 	*/
 	function unconvert_field($field, $return) {
+		if ($field == null) {
+			return '';
+		}
 		if (preg_match("~binary~", $field["type"])) {
 			$return = "UNHEX($return)";
 		}
