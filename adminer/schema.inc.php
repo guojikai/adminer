@@ -30,8 +30,9 @@ foreach (table_status('', true) as $table => $table_status) {
 	foreach ($adminer->foreignKeys($table) as $val) {
 		if (!$val["db"]) {
 			$left = $base_left;
-			if ($table_pos[$table][1] || $table_pos[$val["table"]][1]) {
-				$left = min(floatval($table_pos[$table][1]), floatval($table_pos[$val["table"]][1])) - 1;
+			if ((isset($table_pos[$table]) && $table_pos[$table][1]) || (isset($table_pos[$val["table"]]) && $table_pos[$val["table"]][1])) {
+				$ttnum = isset($table_pos[$table]) && $table_pos[$table][1] ? $table_pos[$table][1] : 0;
+				$left = min(floatval($ttnum), floatval($ttnum)) - 1;
 			} else {
 				$base_left -= .1;
 			}
@@ -68,8 +69,9 @@ foreach ($schema as $name => $table) {
 	}
 	
 	foreach ((array) $table["references"] as $target_name => $refs) {
+		$tnnum = isset($table_pos[$name]) && $table_pos[$name][1] ? $table_pos[$name][1] : 0;
 		foreach ($refs as $left => $ref) {
-			$left1 = $left - $table_pos[$name][1];
+			$left1 = $left - $tnnum;
 			$i = 0;
 			foreach ($ref[0] as $source) {
 				echo "\n<div class='references' title='" . h($target_name) . "' id='refs$left-" . ($i++) . "' style='left: $left1" . "em; top: " . $table["fields"][$source]["pos"] . "em; padding-top: .5em;'><div style='border-top: 1px solid Gray; width: " . (-$left1) . "em;'></div></div>";
@@ -79,7 +81,8 @@ foreach ($schema as $name => $table) {
 	
 	foreach ((array) $referenced[$name] as $target_name => $refs) {
 		foreach ($refs as $left => $columns) {
-			$left1 = $left - $table_pos[$name][1];
+			$tnnum = isset($table_pos[$name]) && $table_pos[$name][1] == null ? $table_pos[$name][1] : 0;
+			$left1 = $left - $tnnum;
 			$i = 0;
 			foreach ($columns as $target) {
 				echo "\n<div class='references' title='" . h($target_name) . "' id='refd$left-" . ($i++) . "' style='left: $left1" . "em; top: " . $table["fields"][$target]["pos"] . "em; height: 1.25em; background: url(../adminer/static/arrow.gif) no-repeat right center;'><div style='height: .5em; border-bottom: 1px solid Gray; width: " . (-$left1) . "em;'></div></div>";

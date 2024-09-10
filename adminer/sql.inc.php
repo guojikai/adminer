@@ -169,7 +169,8 @@ if (!$error && $_POST) {
 											stop_session();
 										}
 										if (!$_POST["only_errors"]) {
-											echo "<p class='message' title='" . h($connection->info) . "'>" . lang('Query executed OK, %d row(s) affected.', $affected) . "$time\n";
+											$ci_val = isset($connection->info) ? $connection->info : null;
+											echo "<p class='message' title='" . h($ci_val) . "'>" . lang('Query executed OK, %d row(s) affected.', $affected) . "$time\n";
 										}
 									}
 									echo ($warnings ? "<div id='$warnings_id' class='hidden'>\n$warnings</div>\n" : "");

@@ -30,7 +30,7 @@ if ($_POST && !$error && !$_POST["add"] && !$_POST["drop_col"]) {
 			foreach ($index["columns"] as $key => $column) {
 				if ($column != "") {
 					$length = $index["lengths"][$key];
-					$desc = $index["descs"][$key];
+					$desc = isset($index["descs"]) && isset($index["descs"][$key]) ? $index["descs"][$key] : null;
 					$set[] = idf_escape($column) . ($length ? "(" . (+$length) . ")" : "") . ($desc ? " DESC" : "");
 					$columns[] = $column;
 					$lengths[] = ($length ? $length : null);
@@ -126,7 +126,8 @@ foreach ($row["indexes"] as $index) {
 				$column,
 				"partial(" . ($i == count($index["columns"]) ? "indexesAddColumn" : "indexesChangeColumn") . ", '" . js_escape($jush == "sql" ? "" : $_GET["indexes"] . "_") . "')"
 			);
-			echo ($jush == "sql" || $jush == "mssql" ? "<input type='number' name='indexes[$j][lengths][$i]' class='size' value='" . h($index["lengths"][$key]) . "' title='" . lang('Length') . "'>" : "");
+			$ilk_value = isset($index["lengths"]) && isset($index["lengths"][$key]) ? $index["lengths"][$key] : null;
+			echo ($jush == "sql" || $jush == "mssql" ? "<input type='number' name='indexes[$j][lengths][$i]' class='size' value='" . h($ilk_value) . "' title='" . lang('Length') . "'>" : "");
 			echo (support("descidx") ? checkbox("indexes[$j][descs][$i]", 1, $index["descs"][$key], lang('descending')) : "");
 			echo " </span>";
 			$i++;
